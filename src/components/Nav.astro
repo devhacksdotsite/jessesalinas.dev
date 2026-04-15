@@ -1,0 +1,23 @@
+---
+const links = [
+  { href: '#home', label: 'Home' },
+  { href: '#projects', label: 'Projects' },
+  { href: '#about', label: 'About' },
+  { href: '#contact', label: 'Contact' },
+];
+---
+
+<nav class="fixed top-0 w-full z-50 bg-bg/80 backdrop-blur-md border-b border-border">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="#home" class="text-lg font-semibold text-accent">JS</a>
+    <ul class="flex gap-6">
+      {links.map(({ href, label }) => (
+        <li>
+          <a href={href} class="text-text-muted hover:text-accent transition-colors text-sm">
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</nav>
