@@ -3,7 +3,9 @@
 
 <section id="contact" class="py-24 px-6">
   <div class="max-w-6xl mx-auto text-center">
-    <h2 id="contact-heading" class="text-4xl font-bold mb-4">Get in touch</h2>
+    <div class="overflow-hidden">
+      <h2 id="contact-heading" class="section-heading text-4xl font-bold mb-4 translate-y-full">Get in touch</h2>
+    </div>
     <p class="text-text-muted mb-8">Have a project in mind? Let's work together.</p>
     <a
       id="contact-cta"
@@ -24,7 +26,14 @@
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.from('#contact-heading, #contact-cta', {
+  gsap.to('#contact .section-heading', {
+    scrollTrigger: { trigger: '#contact', start: 'top 80%' },
+    y: 0,
+    duration: 0.8,
+    ease: 'power3.out',
+  });
+
+  gsap.from('#contact-cta', {
     scrollTrigger: { trigger: '#contact', start: 'top 80%' },
     opacity: 0,
     y: 20,

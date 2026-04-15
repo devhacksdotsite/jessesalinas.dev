@@ -49,7 +49,9 @@ const projects = [
 
 <section id="projects" class="py-24 px-6">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-4xl font-bold mb-12">Projects</h2>
+    <div class="overflow-hidden">
+      <h2 class="section-heading text-4xl font-bold mb-12 translate-y-full">Projects</h2>
+    </div>
 
     <!-- Filter buttons -->
     <div class="flex flex-wrap gap-3 mb-10">
@@ -108,13 +110,42 @@ const projects = [
       btn.classList.add('text-accent', 'border-accent');
       btn.classList.remove('text-text-muted');
 
-      // Filter cards
+      // Animate filter
+      const visible: Element[] = [];
+      const hidden: Element[] = [];
+
       cards.forEach((card) => {
         const cat = card.getAttribute('data-category');
-        const show = filter === 'All' || cat === filter;
-        (card as HTMLElement).style.display = show ? '' : 'none';
+        if (filter === 'All' || cat === filter) {
+          visible.push(card);
+        } else {
+          hidden.push(card);
+        }
       });
+
+      // Fade out hidden, then show visible
+      const tl = gsap.timeline();
+      if (hidden.length) {
+        tl.to(hidden, { opacity: 0, scale: 0.95, duration: 0.2, stagger: 0.03, onComplete: () => {
+          hidden.forEach((c) => ((c as HTMLElement).style.display = 'none'));
+        }});
+      }
+      tl.call(() => {
+        visible.forEach((c) => {
+          (c as HTMLElement).style.display = '';
+          gsap.set(c, { opacity: 0, scale: 0.95 });
+        });
+      });
+      tl.to(visible, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.05 });
     });
+  });
+
+  // Heading reveal
+  gsap.to('#projects .section-heading', {
+    scrollTrigger: { trigger: '#projects', start: 'top 80%' },
+    y: 0,
+    duration: 0.8,
+    ease: 'power3.out',
   });
 
   // Stagger-in on scroll

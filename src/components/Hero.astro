@@ -3,7 +3,9 @@
 
 <section id="home" class="min-h-screen flex items-center justify-center px-6">
   <div class="text-center">
-    <h1 id="hero-name" class="text-5xl md:text-7xl font-bold mb-4 opacity-0">Jesse Salinas</h1>
+    <div class="overflow-hidden">
+      <h1 id="hero-name" class="text-5xl md:text-7xl font-bold mb-4 translate-y-full opacity-0">Jesse Salinas</h1>
+    </div>
     <div class="text-xl md:text-2xl text-text-muted mb-2 h-8">
       <span id="typewriter"></span><span id="cursor" class="text-accent">|</span>
     </div>
@@ -33,8 +35,8 @@
     'Father of Four',
   ];
 
-  // Fade in name
-  gsap.to('#hero-name', { opacity: 1, y: 0, duration: 0.8, delay: 0.2 });
+  // Slide up name
+  gsap.to('#hero-name', { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out' });
 
   // Typewriter
   const el = document.getElementById('typewriter')!;
