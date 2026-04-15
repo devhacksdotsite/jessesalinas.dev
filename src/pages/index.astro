@@ -9,10 +9,156 @@ import Contact from '../components/Contact.astro';
 
 <Base>
   <Nav />
+
+  <!-- Horizontal slide wrapper: hero slides right, projects slides in from left -->
+  <div id="horizontal-wrapper" class="relative h-screen overflow-hidden">
+    <div id="horizontal-track" class="flex w-[200vw] h-screen">
+      <div class="w-screen h-screen flex-shrink-0">
+        <Hero />
+      </div>
+      <div class="w-screen h-screen flex-shrink-0">
+        <Projects />
+      </div>
+    </div>
+  </div>
+
+  <!-- Remaining sections scroll normally -->
   <main>
-    <Hero />
-    <Projects />
     <About />
     <Contact />
   </main>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+
+    const track = document.getElementById('horizontal-track')!;
+    let stage: 'hero' | 'projects' | 'scrolling' = 'hero';
+    let locked = false;
+
+    // Force start at top on load/refresh
+    window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    document.body.style.overflow = 'hidden';
+
+    function lock(ms = 600) { locked = true; setTimeout(() => { locked = false; }, ms); }
+
+    function slideToProjects() {
+      if (stage !== 'hero' || locked) return;
+      locked = true;
+      stage = 'projects';
+      gsap.to(track, {
+        x: () => -window.innerWidth,
+        duration: 0.8,
+        ease: 'power3.inOut',
+        onComplete: () => lock(),
+      });
+    }
+
+    function slideToHero() {
+      if (stage !== 'projects' || locked) return;
+      locked = true;
+      stage = 'hero';
+      gsap.to(track, {
+        x: 0,
+        duration: 0.8,
+        ease: 'power3.inOut',
+        onComplete: () => lock(),
+      });
+    }
+
+    function enterScrolling() {
+      if (stage !== 'projects' || locked) return;
+      locked = true;
+      stage = 'scrolling';
+      document.body.style.overflow = '';
+      // Small delay so refresh calculates correctly
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+        setTimeout(() => { locked = false; }, 1000);
+      });
+    }
+
+    // Wheel
+    window.addEventListener('wheel', (e) => {
+      if (locked) { e.preventDefault(); return; }
+
+      if (stage === 'hero') {
+        e.preventDefault();
+        if (e.deltaY > 0) slideToProjects();
+      } else if (stage === 'projects') {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+          slideToHero();
+        } else if (e.deltaY > 0) {
+          enterScrolling();
+        }
+      } else if (stage === 'scrolling' && e.deltaY < 0 && window.scrollY <= 0) {
+        e.preventDefault();
+        stage = 'projects';
+        document.body.style.overflow = 'hidden';
+        lock(400);
+      }
+    }, { passive: false });
+
+    // Touch
+    let touchStartY = 0;
+    window.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY; }, { passive: true });
+    window.addEventListener('touchend', (e) => {
+      const delta = touchStartY - e.changedTouches[0].clientY;
+      if (locked) return;
+      if (stage === 'hero' && delta > 50) slideToProjects();
+      else if (stage === 'projects' && delta < -50) slideToHero();
+      else if (stage === 'projects' && delta > 50) enterScrolling();
+    }, { passive: true });
+
+    // Scroll CTA
+    document.getElementById('scroll-cta')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      slideToProjects();
+    });
+
+    // Nav links
+    document.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        const target = link.getAttribute('href')!.slice(1);
+
+        if (target === 'home') {
+          e.preventDefault();
+          if (stage === 'scrolling') {
+            stage = 'projects';
+            document.body.style.overflow = 'hidden';
+            window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+          }
+          if (stage === 'projects') slideToHero();
+          return;
+        }
+
+        if (target === 'projects') {
+          e.preventDefault();
+          if (stage === 'hero') slideToProjects();
+          else if (stage === 'scrolling') {
+            stage = 'projects';
+            document.body.style.overflow = 'hidden';
+            window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+          }
+          return;
+        }
+
+        // About, Contact
+        if (stage !== 'scrolling') {
+          e.preventDefault();
+          if (stage === 'hero') gsap.set(track, { x: -window.innerWidth });
+          stage = 'scrolling';
+          document.body.style.overflow = '';
+          requestAnimationFrame(() => {
+            ScrollTrigger.refresh();
+            document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+          });
+        }
+      });
+    });
+  </script>
 </Base>

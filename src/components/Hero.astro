@@ -16,11 +16,13 @@
       <span>/</span>
       <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
     </div>
-    <a id="scroll-cta" href="#projects" class="inline-flex items-center gap-2 mt-12 text-accent hover:text-accent-hover transition-colors opacity-0">
-      <span class="text-sm">Scroll Down</span>
-      <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+    <a id="scroll-cta" href="#projects" class="inline-flex flex-col items-center gap-2 mt-12 text-text-muted hover:text-accent transition-colors opacity-0">
+      <!-- Mouse scroll SVG -->
+      <svg class="w-6 h-10" viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="1" y="1" width="22" height="38" rx="11" />
+        <line class="mouse-wheel" x1="12" y1="8" x2="12" y2="14" stroke-linecap="round" />
       </svg>
+      <span class="text-xs tracking-widest uppercase">Scroll Down</span>
     </a>
   </div>
 </section>
@@ -75,6 +77,16 @@
   // Stagger in links + CTA
   gsap.to('#hero-links', { opacity: 1, duration: 0.6, delay: 0.6 });
   gsap.to('#scroll-cta', { opacity: 1, duration: 0.6, delay: 0.9 });
+
+  // Mouse wheel animation
+  gsap.to('.mouse-wheel', {
+    y: 6,
+    opacity: 0,
+    repeat: -1,
+    duration: 1,
+    ease: 'power1.in',
+    repeatDelay: 0.5,
+  });
 
   typeRole();
 </script>

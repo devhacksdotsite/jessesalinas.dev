@@ -149,11 +149,14 @@ const projects = [
   });
 
   // Stagger-in on scroll
-  gsap.from('.project-card', {
-    scrollTrigger: { trigger: '#project-grid', start: 'top 80%' },
-    opacity: 0,
-    y: 30,
-    stagger: 0.1,
-    duration: 0.5,
-  });
+  gsap.fromTo('.project-card',
+    { opacity: 0, y: 30 },
+    {
+      scrollTrigger: { trigger: '#project-grid', start: 'top 80%', toggleActions: 'play none none reset' },
+      opacity: 1,
+      y: 0,
+      stagger: 0.1,
+      duration: 0.5,
+    },
+  );
 </script>

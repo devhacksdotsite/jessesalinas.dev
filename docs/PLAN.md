@@ -1,59 +1,63 @@
 # Portfolio Rebuild Plan — jessesalinas.dev
 
-## Current Site Sections (to replicate)
-1. Hero — Name, typewriter effect, scroll CTA
-2. Projects — Filterable grid (All / Frontend / Backend / Full Stack)
-3. About Me — Bio, location, languages, tech stack breakdown
-4. Contact — Email CTA
-5. Navigation — Sticky/scroll-aware nav (Home, Projects, About, Contact)
-
----
-
 ## Proposed Stack
 
 | Layer | Choice | Why |
 |---|---|---|
 | Framework | **Astro** | Built for static sites, zero JS by default, ships only what you need |
-| Styling | **Tailwind CSS** | Utility-first, fast to build, small bundle |
-| Animations | **GSAP** (ScrollTrigger) | Industry-standard, smooth scroll-based animations, replaces custom typewriter JS |
+| Styling | **Tailwind CSS v4** | Utility-first, fast to build, small bundle |
+| Animations | **GSAP** (ScrollTrigger) | Industry-standard, smooth scroll-based animations |
 | Build Output | Static HTML/CSS/JS | No server needed |
 | Hosting | **AWS S3 + CloudFront** | Free-tier eligible, global CDN, HTTPS via ACM cert |
-| DNS | **Route 53** or keep current registrar | Point `jessesalinas.dev` to CloudFront distribution |
 
 ---
 
-## Implementation Plan
+## Current Status
 
-### Phase 1 — Project Setup
-- [ ] Scaffold Astro project in current directory
-- [ ] Install dependencies: `tailwindcss`, `gsap`
-- [ ] Configure Tailwind and base styles (dark theme matching current site)
-- [ ] Set up project structure: `src/layouts`, `src/components`, `src/pages`
+### ✅ Phase 1 — Project Setup
+- Astro project scaffolded (minimal template)
+- Tailwind CSS v4 via `@tailwindcss/vite`
+- GSAP installed
+- Dark theme configured (`#0a0a0a` bg, blue accent, Inter font)
+- Project structure: layouts, components, pages, styles
 
-### Phase 2 — Sections & Content
-- [ ] **Layout** — Create base layout with sticky nav, smooth scroll anchors, and footer
-- [ ] **Hero** — Full-viewport section with name, GSAP typewriter effect, scroll-down CTA
-- [ ] **Projects** — Filterable card grid (All/Frontend/Backend/Full Stack) with GSAP stagger-in animations
-- [ ] **About** — Bio, location, languages, tech stack grouped by category (Backend, Frontend, DB, Tools) with scroll-triggered reveals
-- [ ] **Contact** — Email CTA section with entrance animation
+### ✅ Phase 2 — Sections & Content
+- **Nav** — Hamburger menu (3 lines → X), half-screen slide-in panel with light gray bg, large bold links with teal strikethrough for active section, "JESSE SALINAS" slides in from left, GitHub icon top-right, IntersectionObserver for active section tracking
+- **Hero** — Full-viewport, GSAP slide-up name reveal, async typewriter cycling roles, blinking cursor, mouse scroll SVG with animated wheel, staggered links + scroll CTA
+- **Projects** — Filter buttons (All/Frontend/Backend/Full Stack), 6 placeholder project cards, GSAP animated filter transitions (fade + scale), stagger-in on scroll
+- **About** — 2-column layout (bio + tech stack), content from original site, GSAP scroll reveal
+- **Contact** — Email CTA pill button, footer with copyright, GSAP scroll reveal
 
-### Phase 3 — Animations (GSAP)
-- [ ] Typewriter text effect on hero (replaces custom JS)
-- [ ] ScrollTrigger reveal animations on each section
-- [ ] Staggered card entrance on Projects grid
-- [ ] Smooth nav highlight on scroll (active section indicator)
+### ✅ Phase 3 — Animations (GSAP)
+- Section heading slide-up reveals (overflow-hidden mask + translateY)
+- Hero name slide-up with `power3.out` easing
+- Project filter: GSAP timeline fade/scale transitions
+- `prefers-reduced-motion` media query disables all animations
+- `gsap.fromTo` with `toggleActions: 'play none none reset'` for reliable scroll animations
 
-### Phase 4 — Polish
-- [ ] Responsive design (mobile-first)
-- [ ] Accessibility pass (semantic HTML, focus states, reduced-motion media query)
+### ✅ Horizontal Scroll Transition (matching original site)
+- 3-stage system: `hero` → `projects` → `scrolling`
+- Hero and Projects sit side-by-side in a `200vw` flex track
+- Scroll down on hero → GSAP slides track left (hero exits right, projects enters from left)
+- Scroll up on projects → slides back to hero
+- Scroll down on projects → smooth scroll into About/Contact (normal flow)
+- Scroll back to top from About → re-enters projects stage
+- Nav links properly manage stage transitions
+- Body `overflow: hidden` during hero/projects stages, unlocked for scrolling
+- `scrollRestoration: manual` prevents browser restoring scroll on refresh
+- Touch support for mobile (swipe up/down)
+
+### ⬜ Phase 4 — Polish (TODO)
+- [ ] Responsive design audit (mobile-first)
+- [ ] Accessibility pass (semantic HTML, focus states, ARIA)
 - [ ] Meta tags, Open Graph, favicon
 - [ ] Performance audit (Lighthouse)
 
-### Phase 5 — Deployment
+### ⬜ Phase 5 — Deployment (TODO)
 - [ ] `astro build` → static output in `dist/`
-- [ ] Create S3 bucket configured for static website hosting
-- [ ] Set up CloudFront distribution with ACM SSL cert for `jessesalinas.dev`
-- [ ] Update DNS to point to CloudFront
+- [ ] Create S3 bucket for static website hosting
+- [ ] CloudFront distribution with ACM SSL cert
+- [ ] Update DNS for `jessesalinas.dev`
 - [ ] Tear down Digital Ocean droplet
 
 ---
@@ -63,11 +67,13 @@
 ```
 .
 ├── astro.config.mjs
-├── tailwind.config.mjs
 ├── package.json
+├── tsconfig.json
+├── docs/
+│   └── PLAN.md
 ├── public/
 │   ├── favicon.svg
-│   └── images/
+│   └── favicon.ico
 ├── src/
 │   ├── layouts/
 │   │   └── Base.astro

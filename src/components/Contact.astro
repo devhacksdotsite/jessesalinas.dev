@@ -33,11 +33,13 @@
     ease: 'power3.out',
   });
 
-  gsap.from('#contact-cta', {
-    scrollTrigger: { trigger: '#contact', start: 'top 80%' },
-    opacity: 0,
-    y: 20,
-    stagger: 0.15,
-    duration: 0.5,
-  });
+  gsap.fromTo('#contact-cta',
+    { opacity: 0, y: 20 },
+    {
+      scrollTrigger: { trigger: '#contact', start: 'top 80%', toggleActions: 'play none none reset' },
+      opacity: 1,
+      y: 0,
+      duration: 0.5,
+    },
+  );
 </script>

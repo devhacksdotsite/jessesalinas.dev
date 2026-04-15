@@ -7,94 +7,156 @@ const links = [
 ];
 ---
 
-<nav id="nav" class="fixed top-0 w-full z-50 border-b border-transparent transition-all duration-300">
-  <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-    <a href="#home" class="text-lg font-bold text-accent">JS</a>
-
-    <!-- Desktop links -->
-    <ul class="hidden md:flex gap-8">
-      {links.map(({ href, label }) => (
-        <li>
-          <a href={href} class="nav-link text-text-muted hover:text-accent transition-colors text-sm" data-section={href.slice(1)}>
-            {label}
-          </a>
-        </li>
-      ))}
-    </ul>
-
-    <!-- Mobile toggle -->
-    <button id="menu-toggle" class="md:hidden text-text-muted" aria-label="Toggle menu">
-      <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-      <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-      </svg>
+<!-- Top bar: hamburger + name (left), GH icon (right) -->
+<div id="nav-bar" class="fixed top-0 w-full z-50 px-6 py-5 flex justify-between items-center">
+  <div class="flex items-center gap-4">
+    <!-- Hamburger -->
+    <button id="menu-toggle" class="relative w-8 h-6 flex flex-col justify-between z-50" aria-label="Toggle menu">
+      <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
+      <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
+      <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
     </button>
+    <!-- Name (slides in) -->
+    <span id="nav-name" class="text-xs font-semibold tracking-[0.2em] uppercase text-text opacity-0 -translate-x-4">
+      Jesse Salinas
+    </span>
   </div>
 
-  <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-bg/95 backdrop-blur-md border-t border-border">
-    <ul class="flex flex-col items-center gap-6 py-8">
+  <!-- GitHub icon -->
+  <a
+    href="https://github.com/devhacksdotsite/portfolio"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="z-50 text-text-muted hover:text-accent transition-colors"
+    aria-label="GitHub"
+  >
+    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+    </svg>
+  </a>
+</div>
+
+<!-- Slide-in menu panel -->
+<div id="menu-panel" class="fixed inset-0 z-40 pointer-events-none">
+  <!-- Light background panel -->
+  <div id="menu-bg" class="absolute inset-y-0 left-0 w-full md:w-1/2 bg-[#e8e8e8] -translate-x-full transition-none">
+    <div class="flex flex-col justify-center h-full px-12 md:px-20">
       {links.map(({ href, label }) => (
-        <li>
-          <a href={href} class="mobile-nav-link nav-link text-text-muted hover:text-accent transition-colors text-lg" data-section={href.slice(1)}>
-            {label}
-          </a>
-        </li>
+        <a
+          href={href}
+          class="menu-link relative block text-4xl md:text-5xl font-bold text-[#333] py-4 opacity-0 -translate-x-8"
+          data-section={href.slice(1)}
+        >
+          {label}
+        </a>
       ))}
-    </ul>
+    </div>
   </div>
-</nav>
+</div>
+
+<style>
+  /* Hamburger → X animation */
+  .menu-open .hamburger-line:nth-child(1) {
+    transform: translateY(10px) rotate(45deg);
+    background-color: #333;
+  }
+  .menu-open .hamburger-line:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-open .hamburger-line:nth-child(3) {
+    transform: translateY(-10px) rotate(-45deg);
+    background-color: #333;
+  }
+  .menu-open #nav-name {
+    color: #333;
+  }
+
+  /* Active link: teal strikethrough */
+  .menu-link.active {
+    color: #333;
+  }
+  .menu-link.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-accent);
+  }
+</style>
 
 <script>
-  const nav = document.getElementById('nav')!;
+  import { gsap } from 'gsap';
+
   const toggle = document.getElementById('menu-toggle')!;
-  const mobileMenu = document.getElementById('mobile-menu')!;
-  const menuIcon = document.getElementById('menu-icon')!;
-  const closeIcon = document.getElementById('close-icon')!;
-  const navLinks = document.querySelectorAll('.nav-link');
+  const navBar = document.getElementById('nav-bar')!;
+  const menuPanel = document.getElementById('menu-panel')!;
+  const menuBg = document.getElementById('menu-bg')!;
+  const navName = document.getElementById('nav-name')!;
+  const menuLinks = document.querySelectorAll('.menu-link');
   const sections = document.querySelectorAll('section[id]');
 
-  // Mobile menu toggle
-  toggle.addEventListener('click', () => {
-    const open = mobileMenu.classList.toggle('hidden');
-    menuIcon.classList.toggle('hidden', !open);
-    closeIcon.classList.toggle('hidden', open);
-  });
+  let isOpen = false;
 
-  // Close mobile menu on link click
-  document.querySelectorAll('.mobile-nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      mobileMenu.classList.add('hidden');
-      menuIcon.classList.remove('hidden');
-      closeIcon.classList.add('hidden');
+  // Set initial active
+  function updateActive(sectionId: string) {
+    menuLinks.forEach((link) => {
+      const active = link.getAttribute('data-section') === sectionId;
+      link.classList.toggle('active', active);
     });
-  });
+  }
+  updateActive('home');
 
-  // Scroll: nav background + active section
+  // IntersectionObserver for active section
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          navLinks.forEach((link) => {
-            const isActive = link.getAttribute('data-section') === entry.target.id;
-            link.classList.toggle('text-accent', isActive);
-            link.classList.toggle('text-text-muted', !isActive);
-          });
-        }
+        if (entry.isIntersecting) updateActive(entry.target.id);
       });
     },
     { rootMargin: '-50% 0px -50% 0px' }
   );
-
   sections.forEach((s) => observer.observe(s));
 
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY > 50;
-    nav.classList.toggle('bg-bg/80', scrolled);
-    nav.classList.toggle('backdrop-blur-md', scrolled);
-    nav.classList.toggle('border-border', scrolled);
-    nav.classList.toggle('border-transparent', !scrolled);
+  // Toggle menu
+  toggle.addEventListener('click', () => {
+    isOpen = !isOpen;
+
+    if (isOpen) {
+      menuPanel.classList.remove('pointer-events-none');
+      navBar.classList.add('menu-open');
+
+      gsap.to(menuBg, { x: 0, duration: 0.5, ease: 'power3.out' });
+      gsap.to(navName, { opacity: 1, x: 0, duration: 0.4, delay: 0.2, ease: 'power2.out' });
+      gsap.to(menuLinks, { opacity: 1, x: 0, stagger: 0.08, duration: 0.4, delay: 0.15, ease: 'power2.out' });
+    } else {
+      closeMenu();
+    }
+  });
+
+  function closeMenu() {
+    isOpen = false;
+    navBar.classList.remove('menu-open');
+
+    gsap.to(menuLinks, { opacity: 0, x: -32, duration: 0.2, stagger: 0.03 });
+    gsap.to(navName, { opacity: 0, x: -16, duration: 0.2 });
+    gsap.to(menuBg, {
+      x: '-100%',
+      duration: 0.4,
+      delay: 0.15,
+      ease: 'power3.in',
+      onComplete: () => menuPanel.classList.add('pointer-events-none'),
+    });
+  }
+
+  // Close on link click
+  menuLinks.forEach((link) => {
+    link.addEventListener('click', () => closeMenu());
+  });
+
+  // Close on clicking dark area (right side)
+  menuPanel.addEventListener('click', (e) => {
+    if (e.target === menuPanel) closeMenu();
   });
 </script>
