@@ -3,46 +3,64 @@ const filters = ['All', 'Frontend', 'Backend', 'Full Stack'];
 
 const projects = [
   {
+    id: 'portfolio',
     title: 'Portfolio Site',
     description: 'Personal portfolio built with Astro, Tailwind CSS, and GSAP animations.',
     tags: ['Astro', 'Tailwind', 'GSAP'],
     category: 'Frontend',
-    link: '#',
+    date: '2026',
+    services: ['UI/UX Design', 'Frontend Development', 'Animation'],
+    details: 'A modern, static portfolio site built from scratch using Astro for zero-JS-by-default static generation, Tailwind CSS v4 for styling, and GSAP for scroll-triggered animations and horizontal slide transitions. Features light/dark mode, a 3-stage scroll system, and responsive design.',
   },
   {
+    id: 'task-app',
     title: 'Task Management App',
     description: 'Full stack task manager with real-time updates and team collaboration.',
     tags: ['React', 'Node.js', 'MySQL'],
     category: 'Full Stack',
-    link: '#',
+    date: '2025',
+    services: ['Full Stack Development', 'Database Design', 'REST API'],
+    details: 'A collaborative task management application with real-time updates via WebSockets, role-based access control, and a clean React frontend backed by a Node.js/Express API with MySQL persistence.',
   },
   {
+    id: 'rest-api',
     title: 'REST API Service',
     description: 'RESTful API with authentication, rate limiting, and comprehensive docs.',
     tags: ['Node.js', 'Express', 'Docker'],
     category: 'Backend',
-    link: '#',
+    date: '2024',
+    services: ['Backend Development', 'API Design', 'DevOps'],
+    details: 'A production-ready RESTful API service featuring JWT authentication, rate limiting, request validation, comprehensive Swagger documentation, and Docker containerization for consistent deployment.',
   },
   {
+    id: 'ecommerce',
     title: 'E-Commerce Dashboard',
     description: 'Admin dashboard with analytics, inventory management, and reporting.',
     tags: ['Vue', 'Vuetify', 'PHP'],
     category: 'Full Stack',
-    link: '#',
+    date: '2024',
+    services: ['Frontend Development', 'Backend Development', 'Data Visualization'],
+    details: 'An admin dashboard for e-commerce operations featuring real-time analytics charts, inventory management with bulk operations, order tracking, and exportable reports. Built with Vue/Vuetify frontend and PHP backend.',
   },
   {
+    id: 'component-lib',
     title: 'Component Library',
     description: 'Reusable UI component library with theming and accessibility built in.',
     tags: ['React', 'Tailwind', 'Storybook'],
     category: 'Frontend',
-    link: '#',
+    date: '2023',
+    services: ['UI/UX Design', 'Frontend Development', 'Documentation'],
+    details: 'A design system and component library built with React and Tailwind CSS, documented in Storybook. Includes accessible, themeable components with full keyboard navigation and ARIA support.',
   },
   {
+    id: 'data-pipeline',
     title: 'Data Pipeline',
     description: 'Automated ETL pipeline for processing and transforming large datasets.',
     tags: ['Python', 'Docker', 'AWS'],
     category: 'Backend',
-    link: '#',
+    date: '2023',
+    services: ['Backend Development', 'Data Engineering', 'Cloud Infrastructure'],
+    details: 'An automated ETL pipeline built with Python, orchestrated via Docker containers, and deployed on AWS. Handles data ingestion, transformation, and loading with error handling, retry logic, and monitoring.',
   },
 ];
 ---
@@ -57,7 +75,7 @@ const projects = [
     <div class="flex flex-wrap gap-3 mb-10">
       {filters.map((f) => (
         <button
-          class="filter-btn px-4 py-2 text-sm rounded-full border border-border text-text-muted hover:text-accent hover:border-accent transition-colors"
+          class="filter-btn px-4 py-2 text-sm rounded-full border border-border text-text-muted hover:text-accent hover:border-accent transition-colors cursor-pointer"
           data-filter={f}
         >
           {f}
@@ -68,10 +86,13 @@ const projects = [
     <!-- Project grid -->
     <div id="project-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {projects.map((p) => (
-        <a
-          href={p.link}
-          class="project-card group block p-6 rounded-xl border border-border bg-bg-secondary hover:border-accent/50 transition-all duration-300"
+        <button
+          class="project-card group block p-6 rounded-xl border border-border bg-bg-secondary hover:border-accent/50 transition-all duration-300 text-left cursor-pointer"
           data-category={p.category}
+          data-project={p.id}
+          data-date={p.date}
+          data-services={p.services.join('|')}
+          data-details={p.details}
         >
           <h3 class="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{p.title}</h3>
           <p class="text-text-muted text-sm mb-4">{p.description}</p>
@@ -80,7 +101,7 @@ const projects = [
               <span class="text-xs px-2 py-1 rounded bg-border/50 text-text-muted">{tag}</span>
             ))}
           </div>
-        </a>
+        </button>
       ))}
     </div>
   </div>
@@ -91,10 +112,73 @@ const projects = [
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
   gsap.registerPlugin(ScrollTrigger);
 
+  const projects = JSON.parse(document.querySelector('#project-grid')?.closest('section')?.querySelector('script[type="application/json"]')?.textContent || '[]') as any[];
+
+  // Project data (mirrored from frontmatter for client-side access)
+  const projectData: Record<string, any> = {};
+  document.querySelectorAll('.project-card').forEach((card) => {
+    const id = card.getAttribute('data-project')!;
+    projectData[id] = {
+      title: card.querySelector('h3')?.textContent || '',
+      description: card.querySelector('p')?.textContent || '',
+      tags: Array.from(card.querySelectorAll('.bg-border\\/50')).map(t => t.textContent || ''),
+    };
+  });
+
+  const dialog = document.getElementById('project-dialog')!;
+  const dialogTitle = document.getElementById('dialog-title')!;
+  const dialogDate = document.getElementById('dialog-date')!;
+  const dialogServices = document.getElementById('dialog-services')!;
+  const dialogTags = document.getElementById('dialog-tags')!;
+  const dialogDetails = document.getElementById('dialog-details')!;
+  const closeBtn = document.getElementById('project-close')!;
+
+  function openDialog(id: string) {
+    const card = document.querySelector(`[data-project="${id}"]`)!;
+    const title = card.querySelector('h3')?.textContent || '';
+    const tags = Array.from(card.querySelectorAll('span')).map(s => s.textContent || '');
+    const date = card.getAttribute('data-date') || '';
+    const services = card.getAttribute('data-services') || '';
+    const details = card.getAttribute('data-details') || '';
+
+    dialogTitle.textContent = title;
+    dialogDate.textContent = date;
+    dialogServices.innerHTML = services.split('|').map(s => `<p>${s}</p>`).join('');
+    dialogTags.innerHTML = tags.map(t => `<span class="text-xs px-2 py-1 rounded bg-border/50 text-text-muted">${t}</span>`).join('');
+    dialogDetails.textContent = details;
+
+    dialog.classList.remove('pointer-events-none');
+    gsap.to(dialog, { y: 0, duration: 0.5, ease: 'power3.out' });
+  }
+
+  function closeDialog() {
+    gsap.to(dialog, {
+      y: '100%',
+      duration: 0.4,
+      ease: 'power3.in',
+      onComplete: () => dialog.classList.add('pointer-events-none'),
+    });
+  }
+
+  // Card clicks
+  document.querySelectorAll('.project-card').forEach((card) => {
+    card.addEventListener('click', (e) => {
+      e.preventDefault();
+      openDialog(card.getAttribute('data-project')!);
+    });
+  });
+
+  closeBtn.addEventListener('click', closeDialog);
+
+  // ESC to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDialog();
+  });
+
+  // Filter buttons
   const buttons = document.querySelectorAll('.filter-btn');
   const cards = document.querySelectorAll('.project-card');
 
-  // Set "All" active by default
   buttons[0]?.classList.add('text-accent', 'border-accent');
   buttons[0]?.classList.remove('text-text-muted');
 
@@ -102,7 +186,6 @@ const projects = [
     btn.addEventListener('click', () => {
       const filter = btn.getAttribute('data-filter')!;
 
-      // Update active button
       buttons.forEach((b) => {
         b.classList.remove('text-accent', 'border-accent');
         b.classList.add('text-text-muted');
@@ -110,20 +193,15 @@ const projects = [
       btn.classList.add('text-accent', 'border-accent');
       btn.classList.remove('text-text-muted');
 
-      // Animate filter
       const visible: Element[] = [];
       const hidden: Element[] = [];
 
       cards.forEach((card) => {
         const cat = card.getAttribute('data-category');
-        if (filter === 'All' || cat === filter) {
-          visible.push(card);
-        } else {
-          hidden.push(card);
-        }
+        if (filter === 'All' || cat === filter) visible.push(card);
+        else hidden.push(card);
       });
 
-      // Fade out hidden, then show visible
       const tl = gsap.timeline();
       if (hidden.length) {
         tl.to(hidden, { opacity: 0, scale: 0.95, duration: 0.2, stagger: 0.03, onComplete: () => {
@@ -148,7 +226,6 @@ const projects = [
     ease: 'power3.out',
   });
 
-  // Stagger-in on scroll
   gsap.fromTo('.project-card',
     { opacity: 0, y: 30 },
     {

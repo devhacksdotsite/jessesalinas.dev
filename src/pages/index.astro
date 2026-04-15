@@ -38,6 +38,38 @@ import Contact from '../components/Contact.astro';
     <Contact />
   </main>
 
+  <!-- Project detail overlay — outside all layout, above everything -->
+  <div id="project-dialog" class="fixed inset-0 z-[100] bg-bg overflow-y-auto translate-y-full pointer-events-none">
+    <div class="max-w-4xl mx-auto px-6 py-16">
+      <button id="project-close" class="fixed top-6 right-6 text-text-muted hover:text-accent transition-colors cursor-pointer z-[101]" aria-label="Close">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <h2 id="dialog-title" class="text-4xl md:text-5xl font-bold mb-8"></h2>
+
+      <div class="grid md:grid-cols-3 gap-8 mb-10">
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-accent">Date</span>
+          <p id="dialog-date" class="text-text-muted mt-1"></p>
+        </div>
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-accent">Services</span>
+          <div id="dialog-services" class="text-text-muted mt-1"></div>
+        </div>
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-widest text-accent">Tech</span>
+          <div id="dialog-tags" class="flex flex-wrap gap-2 mt-1"></div>
+        </div>
+      </div>
+
+      <div class="border-t border-border pt-8">
+        <p id="dialog-details" class="text-text-muted leading-relaxed text-lg"></p>
+      </div>
+    </div>
+  </div>
+
   <script>
     import { gsap } from 'gsap';
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
