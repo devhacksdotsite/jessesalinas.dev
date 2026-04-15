@@ -11,7 +11,7 @@ const links = [
 <div id="nav-bar" class="fixed top-0 w-full z-50 px-6 py-5 flex justify-between items-center">
   <div class="flex items-center gap-4">
     <!-- Hamburger -->
-    <button id="menu-toggle" class="relative w-8 h-6 flex flex-col justify-between z-50" aria-label="Toggle menu">
+    <button id="menu-toggle" class="relative w-8 h-6 flex flex-col justify-between z-50 cursor-pointer" aria-label="Toggle menu">
       <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
       <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
       <span class="hamburger-line block w-full h-0.5 bg-text transition-all duration-300 origin-center"></span>
@@ -24,7 +24,7 @@ const links = [
 
   <!-- GitHub icon + theme toggle -->
   <div class="flex items-center gap-3 z-50">
-    <button id="theme-toggle" class="text-text-muted hover:text-accent transition-colors" aria-label="Toggle theme">
+    <button id="theme-toggle" class="text-text-muted hover:text-accent transition-colors cursor-pointer" aria-label="Toggle theme">
       <!-- Sun (shown in dark mode) -->
       <svg class="w-5 h-5 hidden dark-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -35,7 +35,7 @@ const links = [
       </svg>
     </button>
     <a
-      href="https://github.com/devhacksdotsite/portfolio"
+      href="https://github.com/devhacksdotsite/"
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-muted hover:text-accent transition-colors"
@@ -116,16 +116,20 @@ const links = [
   }
   updateActive('home');
 
-  // IntersectionObserver for active section
+  // Expose globally so the page stage script can call it
+  (window as any).updateActiveNav = updateActive;
+
+  // Observer for About/Contact in normal scroll flow
+  const scrollSections = document.querySelectorAll('main section[id]');
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) updateActive(entry.target.id);
       });
     },
-    { rootMargin: '-50% 0px -50% 0px' }
+    { rootMargin: '-40% 0px -40% 0px' }
   );
-  sections.forEach((s) => observer.observe(s));
+  scrollSections.forEach((s) => observer.observe(s));
 
   // Toggle menu
   toggle.addEventListener('click', () => {
@@ -158,9 +162,12 @@ const links = [
     });
   }
 
-  // Close on link click
+  // Close on link click (prevent hash from being added to URL)
   menuLinks.forEach((link) => {
-    link.addEventListener('click', () => closeMenu());
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeMenu();
+    });
   });
 
   // Close on clicking dark area (right side)

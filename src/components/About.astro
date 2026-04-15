@@ -2,19 +2,30 @@
 const techStack = [
   {
     label: 'Backend',
-    items: ['Node.js (Express.js)', 'PHP', 'Perl (Mojolicious)', 'Python', 'ColdFusion (Lucee5)', 'WordPress', 'Strapi'],
+    items: ['Node.js (Express.js)', 'PHP', 'Perl (Mojolicious)', 'Python', 'ColdFusion (Lucee 5)', 'WordPress', 'Strapi'],
   },
   {
     label: 'Frontend',
-    items: ['HTML', 'CSS', 'SCSS', 'JavaScript', 'ReactJS', 'Vue', 'Vuex', 'Svelte', 'Next.js', 'Tailwind', 'Bootstrap', 'MaterialUI', 'Vuetify', 'jQuery'],
+    items: ['HTML', 'CSS', 'SCSS', 'JavaScript', 'TypeScript', 'React', 'Vue', 'Vuex', 'PrimeVue', 'Svelte', 'Next.js', 'Astro', 'Tailwind CSS', 'Bootstrap', 'Material UI', 'Vuetify', 'jQuery'],
   },
   {
     label: 'Database',
-    items: ['MySQL', 'MariaDB'],
+    items: ['MySQL', 'MariaDB', 'Amazon Aurora', 'DynamoDB'],
+  },
+  {
+    label: 'Cloud / DevOps',
+    items: ['AWS (S3, EC2, RDS, CloudFront)', 'Docker', 'Linux (Ubuntu)', 'Nginx', 'Apache'],
   },
   {
     label: 'Tools / Other',
-    items: ['Docker', 'AWS (S3, EC2, RDS)', 'REST', 'cURL', 'Git', 'TFS', 'Linux', 'Nginx', 'Apache', 'Tmux', 'Vim', 'Webpack', 'Gulp', 'GTM', 'Livekit'],
+    items: ['REST APIs', 'cURL', 'Git', 'TFS', 'Tmux', 'Vim', 'Webpack', 'Gulp', 'Google Tag Manager (GTM)', 'LiveKit', 'Mermaid', 'TSDoc'],
+  },
+];
+
+const credentials = [
+  {
+    label: 'Security Clearance',
+    items: ['U.S. Department of Homeland Security (DHS) Clearance (active)'],
   },
 ];
 ---
@@ -29,16 +40,16 @@ const techStack = [
       <!-- Bio -->
       <div class="about-block">
         <div class="flex flex-wrap gap-x-8 gap-y-2 text-sm text-text-muted mb-6">
-          <span><span class="text-text font-medium">Location:</span> Sunny Arizona</span>
+          <span><span class="text-text font-medium">Location:</span> Always Sunny Arizona</span>
           <span><span class="text-text font-medium">Languages:</span> English, Spanish</span>
         </div>
 
         <div class="space-y-4 text-text-muted leading-relaxed">
           <p>
-            Hi, my name is Jesse. I am a passionate Software Developer and a proud father of four beautiful children. Over the years, I have immersed myself in the world of coding, with a particular focus on web development.
+            Hi, I'm Jesse! I'm a software engineer focused on building scalable web applications and systems. I specialize in full-stack development and have experience taking products through the entire lifecycle: from architecture and system design to development, deployment, and ongoing operations.
           </p>
           <p>
-            I have a strong command of both frontend and backend development, and I am capable of creating clean and functional full-stack applications and systems. Whether you're looking for collaboration on a project or seeking someone to work on your next endeavor, feel free to reach out.
+            I enjoy creating clean, maintainable solutions and designing systems that are reliable, efficient, and built to grow. I'm always open to collaborating on projects or helping bring new ideas to life.
           </p>
         </div>
       </div>
@@ -52,6 +63,17 @@ const techStack = [
             <div class="flex flex-wrap gap-2">
               {items.map((item) => (
                 <span class="text-xs px-2 py-1 rounded bg-border/50 text-text-muted">{item}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+
+        {credentials.map(({ label, items }) => (
+          <div>
+            <h4 class="text-sm font-medium text-accent mb-2">{label}</h4>
+            <div class="flex flex-wrap gap-2">
+              {items.map((item) => (
+                <span class="text-xs px-2 py-1 rounded bg-accent/15 text-accent">{item}</span>
               ))}
             </div>
           </div>

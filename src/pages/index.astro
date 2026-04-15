@@ -22,6 +22,16 @@ import Contact from '../components/Contact.astro';
     </div>
   </div>
 
+  <!-- Floating scroll button -->
+  <a id="scroll-arrow" class="fixed bottom-8 left-6 z-50 flex flex-col items-center gap-2 text-text-muted hover:text-accent transition-colors cursor-pointer opacity-0 pointer-events-none">
+    <div id="scroll-icon-wrap" class="transition-transform duration-300">
+      <svg class="w-4 h-4 animate-[bounce_2s_ease-in-out_infinite]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m0 0l-5-5m5 5l5-5" />
+      </svg>
+    </div>
+    <span class="text-xs font-semibold uppercase tracking-widest" style="writing-mode: vertical-lr;">Scroll</span>
+  </a>
+
   <!-- Remaining sections scroll normally -->
   <main>
     <About />
@@ -40,19 +50,22 @@ import Contact from '../components/Contact.astro';
     // Force start at top on load/refresh
     window.history.scrollRestoration = 'manual';
     window.scrollTo(0, 0);
+    if (window.location.hash) history.replaceState(null, '', window.location.pathname);
     document.body.style.overflow = 'hidden';
 
     function lock(ms = 600) { locked = true; setTimeout(() => { locked = false; }, ms); }
+    const nav = (id: string) => (window as any).updateActiveNav?.(id);
 
     function slideToProjects() {
       if (stage !== 'hero' || locked) return;
       locked = true;
       stage = 'projects';
+      nav('projects');
       gsap.to(track, {
         x: () => -window.innerWidth,
         duration: 0.8,
         ease: 'power3.inOut',
-        onComplete: () => lock(),
+        onComplete: () => { lock(); updateArrow(); },
       });
     }
 
@@ -60,11 +73,12 @@ import Contact from '../components/Contact.astro';
       if (stage !== 'projects' || locked) return;
       locked = true;
       stage = 'hero';
+      nav('home');
       gsap.to(track, {
         x: 0,
         duration: 0.8,
         ease: 'power3.inOut',
-        onComplete: () => lock(),
+        onComplete: () => { lock(); updateArrow(); },
       });
     }
 
@@ -77,7 +91,7 @@ import Contact from '../components/Contact.astro';
       requestAnimationFrame(() => {
         ScrollTrigger.refresh();
         window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-        setTimeout(() => { locked = false; }, 1000);
+        setTimeout(() => { locked = false; updateArrow(); }, 1000);
       });
     }
 
@@ -98,8 +112,10 @@ import Contact from '../components/Contact.astro';
       } else if (stage === 'scrolling' && e.deltaY < 0 && window.scrollY <= 0) {
         e.preventDefault();
         stage = 'projects';
+        nav('projects');
         document.body.style.overflow = 'hidden';
         lock(400);
+        updateArrow();
       }
     }, { passive: false });
 
@@ -120,6 +136,26 @@ import Contact from '../components/Contact.astro';
       slideToProjects();
     });
 
+    // Scroll arrow
+    const scrollArrow = document.getElementById('scroll-arrow')!;
+    const scrollIconWrap = document.getElementById('scroll-icon-wrap')!;
+
+    function updateArrow() {
+      const hidden = stage === 'hero';
+      scrollArrow.classList.toggle('opacity-0', hidden);
+      scrollArrow.classList.toggle('pointer-events-none', hidden);
+      scrollIconWrap.style.transform = stage === 'projects' ? '' : 'rotate(180deg)';
+    }
+    updateArrow();
+
+    scrollArrow.addEventListener('click', () => {
+      if (stage === 'hero') slideToProjects();
+      else if (stage === 'projects') slideToHero();
+      else if (stage === 'scrolling') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
     // Nav links
     document.querySelectorAll('a[href^="#"]').forEach((link) => {
       link.addEventListener('click', (e) => {
@@ -129,10 +165,12 @@ import Contact from '../components/Contact.astro';
           e.preventDefault();
           if (stage === 'scrolling') {
             stage = 'projects';
+            nav('projects');
             document.body.style.overflow = 'hidden';
             window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
           }
           if (stage === 'projects') slideToHero();
+          updateArrow();
           return;
         }
 
@@ -141,15 +179,17 @@ import Contact from '../components/Contact.astro';
           if (stage === 'hero') slideToProjects();
           else if (stage === 'scrolling') {
             stage = 'projects';
+            nav('projects');
             document.body.style.overflow = 'hidden';
             window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
           }
+          updateArrow();
           return;
         }
 
         // About, Contact
+        e.preventDefault();
         if (stage !== 'scrolling') {
-          e.preventDefault();
           if (stage === 'hero') gsap.set(track, { x: -window.innerWidth });
           stage = 'scrolling';
           document.body.style.overflow = '';
@@ -157,7 +197,10 @@ import Contact from '../components/Contact.astro';
             ScrollTrigger.refresh();
             document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
           });
+        } else {
+          document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
         }
+        updateArrow();
       });
     });
   </script>
