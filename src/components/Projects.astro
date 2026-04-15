@@ -1,10 +1,128 @@
 ---
+const filters = ['All', 'Frontend', 'Backend', 'Full Stack'];
+
+const projects = [
+  {
+    title: 'Portfolio Site',
+    description: 'Personal portfolio built with Astro, Tailwind CSS, and GSAP animations.',
+    tags: ['Astro', 'Tailwind', 'GSAP'],
+    category: 'Frontend',
+    link: '#',
+  },
+  {
+    title: 'Task Management App',
+    description: 'Full stack task manager with real-time updates and team collaboration.',
+    tags: ['React', 'Node.js', 'MySQL'],
+    category: 'Full Stack',
+    link: '#',
+  },
+  {
+    title: 'REST API Service',
+    description: 'RESTful API with authentication, rate limiting, and comprehensive docs.',
+    tags: ['Node.js', 'Express', 'Docker'],
+    category: 'Backend',
+    link: '#',
+  },
+  {
+    title: 'E-Commerce Dashboard',
+    description: 'Admin dashboard with analytics, inventory management, and reporting.',
+    tags: ['Vue', 'Vuetify', 'PHP'],
+    category: 'Full Stack',
+    link: '#',
+  },
+  {
+    title: 'Component Library',
+    description: 'Reusable UI component library with theming and accessibility built in.',
+    tags: ['React', 'Tailwind', 'Storybook'],
+    category: 'Frontend',
+    link: '#',
+  },
+  {
+    title: 'Data Pipeline',
+    description: 'Automated ETL pipeline for processing and transforming large datasets.',
+    tags: ['Python', 'Docker', 'AWS'],
+    category: 'Backend',
+    link: '#',
+  },
+];
 ---
 
 <section id="projects" class="py-24 px-6">
   <div class="max-w-6xl mx-auto">
     <h2 class="text-4xl font-bold mb-12">Projects</h2>
-    <!-- Filter buttons and project cards will go here -->
-    <p class="text-text-muted">Coming soon...</p>
+
+    <!-- Filter buttons -->
+    <div class="flex flex-wrap gap-3 mb-10">
+      {filters.map((f) => (
+        <button
+          class="filter-btn px-4 py-2 text-sm rounded-full border border-border text-text-muted hover:text-accent hover:border-accent transition-colors"
+          data-filter={f}
+        >
+          {f}
+        </button>
+      ))}
+    </div>
+
+    <!-- Project grid -->
+    <div id="project-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {projects.map((p) => (
+        <a
+          href={p.link}
+          class="project-card group block p-6 rounded-xl border border-border bg-bg-secondary hover:border-accent/50 transition-all duration-300"
+          data-category={p.category}
+        >
+          <h3 class="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{p.title}</h3>
+          <p class="text-text-muted text-sm mb-4">{p.description}</p>
+          <div class="flex flex-wrap gap-2">
+            {p.tags.map((tag) => (
+              <span class="text-xs px-2 py-1 rounded bg-border/50 text-text-muted">{tag}</span>
+            ))}
+          </div>
+        </a>
+      ))}
+    </div>
   </div>
 </section>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+
+  const buttons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.project-card');
+
+  // Set "All" active by default
+  buttons[0]?.classList.add('text-accent', 'border-accent');
+  buttons[0]?.classList.remove('text-text-muted');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const filter = btn.getAttribute('data-filter')!;
+
+      // Update active button
+      buttons.forEach((b) => {
+        b.classList.remove('text-accent', 'border-accent');
+        b.classList.add('text-text-muted');
+      });
+      btn.classList.add('text-accent', 'border-accent');
+      btn.classList.remove('text-text-muted');
+
+      // Filter cards
+      cards.forEach((card) => {
+        const cat = card.getAttribute('data-category');
+        const show = filter === 'All' || cat === filter;
+        (card as HTMLElement).style.display = show ? '' : 'none';
+      });
+    });
+  });
+
+  // Stagger-in on scroll
+  gsap.from('.project-card', {
+    scrollTrigger: { trigger: '#project-grid', start: 'top 80%' },
+    opacity: 0,
+    y: 30,
+    stagger: 0.1,
+    duration: 0.5,
+  });
+</script>

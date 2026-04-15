@@ -1,14 +1,78 @@
 ---
 ---
 
-<section id="home" class="min-h-screen flex items-center justify-center">
+<section id="home" class="min-h-screen flex items-center justify-center px-6">
   <div class="text-center">
-    <h1 class="text-5xl md:text-7xl font-bold mb-4">Jesse Salinas</h1>
-    <p class="text-xl text-text-muted">
-      <span id="typewriter"></span><span class="animate-pulse">|</span>
-    </p>
-    <a href="#projects" class="inline-block mt-8 text-accent hover:text-accent-hover transition-colors">
-      Scroll Down ↓
+    <h1 id="hero-name" class="text-5xl md:text-7xl font-bold mb-4 opacity-0">Jesse Salinas</h1>
+    <div class="text-xl md:text-2xl text-text-muted mb-2 h-8">
+      <span id="typewriter"></span><span id="cursor" class="text-accent">|</span>
+    </div>
+    <div id="hero-links" class="flex justify-center gap-4 text-sm text-text-muted mt-6 opacity-0">
+      <a href="#about" class="hover:text-accent transition-colors">About</a>
+      <span>/</span>
+      <a href="#projects" class="hover:text-accent transition-colors">Projects</a>
+      <span>/</span>
+      <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
+    </div>
+    <a id="scroll-cta" href="#projects" class="inline-flex items-center gap-2 mt-12 text-accent hover:text-accent-hover transition-colors opacity-0">
+      <span class="text-sm">Scroll Down</span>
+      <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
     </a>
   </div>
 </section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const roles = [
+    'Software Developer',
+    'Full Stack Engineer',
+    'Problem Solver',
+    'Father of Four',
+  ];
+
+  // Fade in name
+  gsap.to('#hero-name', { opacity: 1, y: 0, duration: 0.8, delay: 0.2 });
+
+  // Typewriter
+  const el = document.getElementById('typewriter')!;
+  const cursor = document.getElementById('cursor')!;
+  let roleIdx = 0;
+
+  async function typeRole() {
+    const text = roles[roleIdx];
+
+    // Type
+    for (let i = 0; i <= text.length; i++) {
+      el.textContent = text.slice(0, i);
+      await delay(80);
+    }
+
+    await delay(2000);
+
+    // Delete
+    for (let i = text.length; i >= 0; i--) {
+      el.textContent = text.slice(0, i);
+      await delay(40);
+    }
+
+    await delay(400);
+    roleIdx = (roleIdx + 1) % roles.length;
+    typeRole();
+  }
+
+  function delay(ms: number) {
+    return new Promise((r) => setTimeout(r, ms));
+  }
+
+  // Cursor blink
+  gsap.to(cursor, { opacity: 0, repeat: -1, yoyo: true, duration: 0.5, ease: 'steps(1)' });
+
+  // Stagger in links + CTA
+  gsap.to('#hero-links', { opacity: 1, duration: 0.6, delay: 0.6 });
+  gsap.to('#scroll-cta', { opacity: 1, duration: 0.6, delay: 0.9 });
+
+  typeRole();
+</script>
