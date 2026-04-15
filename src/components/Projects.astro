@@ -11,6 +11,7 @@ const projects = [
     date: '2026',
     services: ['UI/UX Design', 'Frontend Development', 'Animation'],
     details: 'A modern, static portfolio site built from scratch using Astro for zero-JS-by-default static generation, Tailwind CSS v4 for styling, and GSAP for scroll-triggered animations and horizontal slide transitions. Features light/dark mode, a 3-stage scroll system, and responsive design.',
+    images: [],
   },
   {
     id: 'task-app',
@@ -21,6 +22,7 @@ const projects = [
     date: '2025',
     services: ['Full Stack Development', 'Database Design', 'REST API'],
     details: 'A collaborative task management application with real-time updates via WebSockets, role-based access control, and a clean React frontend backed by a Node.js/Express API with MySQL persistence.',
+    images: [],
   },
   {
     id: 'rest-api',
@@ -31,16 +33,18 @@ const projects = [
     date: '2024',
     services: ['Backend Development', 'API Design', 'DevOps'],
     details: 'A production-ready RESTful API service featuring JWT authentication, rate limiting, request validation, comprehensive Swagger documentation, and Docker containerization for consistent deployment.',
+    images: [],
   },
   {
-    id: 'ecommerce',
-    title: 'E-Commerce Dashboard',
-    description: 'Admin dashboard with analytics, inventory management, and reporting.',
-    tags: ['Vue', 'Vuetify', 'PHP'],
+    id: 'artventure',
+    title: 'Artventure Portal',
+    description: 'Art school management platform with admin and student portals for class scheduling, enrollment, and payments.',
+    tags: ['React', 'Material UI', 'Node.js', 'Express', 'MySQL', 'Docker', 'AWS'],
     category: 'Full Stack',
-    date: '2024',
-    services: ['Frontend Development', 'Backend Development', 'Data Visualization'],
-    details: 'An admin dashboard for e-commerce operations featuring real-time analytics charts, inventory management with bulk operations, order tracking, and exportable reports. Built with Vue/Vuetify frontend and PHP backend.',
+    date: '2024 – Present',
+    services: ['Full Stack Development', 'System Architecture', 'Cloud Infrastructure', 'Payment Integration'],
+    details: 'Art school management platform for Artventure OC with separate admin and student portals. Manages class scheduling, student enrollment, attendance tracking, payments via Square, and instructor management. Built with React/Material UI frontend, Node.js/Express API, MySQL 8.0 database, and deployed on AWS (EC2, RDS, S3, SES, CloudFront) with Docker and Nginx. Features role-based access control, automated email notifications, and a maintenance page failover via CloudFront.',
+    images: ['/images/projects/artventure-1.png', '/images/projects/artventure-2.png'],
   },
   {
     id: 'component-lib',
@@ -51,6 +55,7 @@ const projects = [
     date: '2023',
     services: ['UI/UX Design', 'Frontend Development', 'Documentation'],
     details: 'A design system and component library built with React and Tailwind CSS, documented in Storybook. Includes accessible, themeable components with full keyboard navigation and ARIA support.',
+    images: [],
   },
   {
     id: 'data-pipeline',
@@ -61,6 +66,7 @@ const projects = [
     date: '2023',
     services: ['Backend Development', 'Data Engineering', 'Cloud Infrastructure'],
     details: 'An automated ETL pipeline built with Python, orchestrated via Docker containers, and deployed on AWS. Handles data ingestion, transformation, and loading with error handling, retry logic, and monitoring.',
+    images: [],
   },
 ];
 ---
@@ -93,6 +99,7 @@ const projects = [
           data-date={p.date}
           data-services={p.services.join('|')}
           data-details={p.details}
+          data-images={p.images.join('|')}
         >
           <h3 class="text-lg font-semibold mb-2 group-hover:text-accent transition-colors">{p.title}</h3>
           <p class="text-text-muted text-sm mb-4">{p.description}</p>
@@ -131,6 +138,7 @@ const projects = [
   const dialogServices = document.getElementById('dialog-services')!;
   const dialogTags = document.getElementById('dialog-tags')!;
   const dialogDetails = document.getElementById('dialog-details')!;
+  const dialogImages = document.getElementById('dialog-images')!;
   const closeBtn = document.getElementById('project-close')!;
 
   function openDialog(id: string) {
@@ -140,12 +148,14 @@ const projects = [
     const date = card.getAttribute('data-date') || '';
     const services = card.getAttribute('data-services') || '';
     const details = card.getAttribute('data-details') || '';
+    const images = (card.getAttribute('data-images') || '').split('|').filter(Boolean);
 
     dialogTitle.textContent = title;
     dialogDate.textContent = date;
     dialogServices.innerHTML = services.split('|').map(s => `<p>${s}</p>`).join('');
     dialogTags.innerHTML = tags.map(t => `<span class="text-xs px-2 py-1 rounded bg-border/50 text-text-muted">${t}</span>`).join('');
     dialogDetails.textContent = details;
+    dialogImages.innerHTML = images.map(src => `<img src="${src}" alt="${title}" class="rounded-lg border border-border w-full" loading="lazy" />`).join('');
 
     dialog.classList.remove('pointer-events-none');
     gsap.to(dialog, { y: 0, duration: 0.5, ease: 'power3.out' });
