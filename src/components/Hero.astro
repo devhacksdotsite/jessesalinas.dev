@@ -1,8 +1,42 @@
 ---
+const techs = [
+  'Node.js', 'React', 'Vue', 'Svelte', 'Next.js', 'Astro', 'Express',
+  'PHP', 'Python', 'Perl', 'MySQL', 'Docker', 'AWS', 'Nginx',
+  'Tailwind', 'SCSS', 'JavaScript', 'TypeScript', 'HTML', 'CSS',
+  'Material UI', 'Vuetify', 'jQuery', 'Git', 'Linux', 'Bootstrap',
+  'DynamoDB', 'REST', 'Webpack', 'PrimeVue', 'Mermaid', 'LiveKit',
+];
+
+// Position each tech in a circular/scattered cloud
+// Using polar coordinates with some randomness for organic feel
+const items = techs.map((name, i) => {
+  const angle = (i / techs.length) * Math.PI * 2;
+  const radius = 28 + (i % 3) * 10; // vary radius between 28-48%
+  const x = 50 + Math.cos(angle) * radius;
+  const y = 50 + Math.sin(angle) * radius;
+  const size = [0.7, 0.85, 1.0, 0.75, 0.9][i % 5];
+  const opacity = [0.12, 0.18, 0.08, 0.15, 0.1][i % 5];
+  return { name, x, y, size, opacity };
+});
 ---
 
-<section id="home" class="min-h-screen flex items-center justify-center px-6">
-  <div class="text-center">
+<section id="home" class="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
+  <!-- Rotating tech cloud -->
+  <div id="tech-cloud" class="absolute inset-0 pointer-events-none">
+    <div id="tech-cloud-inner" class="relative w-full h-full">
+      {items.map(({ name, x, y, size, opacity }) => (
+        <span
+          class="tech-word absolute text-accent font-semibold whitespace-nowrap"
+          style={`left: ${x}%; top: ${y}%; font-size: ${size}rem; opacity: ${opacity}; transform: translate(-50%, -50%) rotate(var(--counter, 0deg)); --counter: 0deg;`}
+        >
+          {name}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <!-- Main content (above cloud) -->
+  <div class="text-center relative z-10">
     <div class="overflow-hidden">
       <h1 id="hero-name" class="text-5xl md:text-7xl font-bold mb-4 translate-y-full opacity-0">Jesse Salinas</h1>
     </div>
@@ -17,7 +51,6 @@
       <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
     </div>
     <a id="scroll-cta" href="#projects" class="inline-flex flex-col items-center gap-2 mt-12 text-text-muted hover:text-accent transition-colors opacity-0">
-      <!-- Mouse scroll SVG -->
       <svg class="w-6 h-10" viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.5">
         <rect x="1" y="1" width="22" height="38" rx="11" />
         <line class="mouse-wheel" x1="12" y1="8" x2="12" y2="14" style="stroke: var(--color-accent)" stroke-linecap="round" />
@@ -39,6 +72,60 @@
     'Deployer of Things',
   ];
 
+  // Gentle sway of the tech cloud
+  const cloudInner = document.getElementById('tech-cloud-inner')!;
+  const cloudRotation = { angle: 0 };
+  gsap.to(cloudRotation, {
+    angle: 30,
+    duration: 60,
+    repeat: -1,
+    yoyo: true,
+    ease: 'sine.inOut',
+    onUpdate: () => {
+      cloudInner.style.transform = `rotate(${cloudRotation.angle}deg)`;
+      // Counter-rotate each word so text stays upright
+      document.querySelectorAll('.tech-word').forEach((word) => {
+        (word as HTMLElement).style.setProperty('--counter', `${-cloudRotation.angle}deg`);
+      });
+    },
+  });
+
+  // Subtle individual float + random scale/opacity for each word
+  document.querySelectorAll('.tech-word').forEach((word, i) => {
+    const baseOpacity = parseFloat((word as HTMLElement).style.opacity) || 0.12;
+
+    // Random float
+    gsap.to(word, {
+      y: `+=${6 + Math.random() * 14}`,
+      x: `+=${-8 + Math.random() * 16}`,
+      duration: 2.5 + Math.random() * 4,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: Math.random() * 3,
+    });
+
+    // Random scale pulse
+    gsap.to(word, {
+      scale: 0.7 + Math.random() * 0.8,
+      duration: 3 + Math.random() * 5,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: Math.random() * 4,
+    });
+
+    // Random opacity flicker
+    gsap.to(word, {
+      opacity: baseOpacity * (0.3 + Math.random() * 1.4),
+      duration: 2 + Math.random() * 6,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      delay: Math.random() * 5,
+    });
+  });
+
   // Slide up name
   gsap.to('#hero-name', { opacity: 1, y: 0, duration: 1, delay: 0.2, ease: 'power3.out' });
 
@@ -49,21 +136,15 @@
 
   async function typeRole() {
     const text = roles[roleIdx];
-
-    // Type
     for (let i = 0; i <= text.length; i++) {
       el.textContent = text.slice(0, i);
       await delay(80);
     }
-
     await delay(2000);
-
-    // Delete
     for (let i = text.length; i >= 0; i--) {
       el.textContent = text.slice(0, i);
       await delay(40);
     }
-
     await delay(400);
     roleIdx = (roleIdx + 1) % roles.length;
     typeRole();
