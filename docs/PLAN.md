@@ -1,4 +1,4 @@
-# Portfolio Rebuild Plan — jessesalinas.dev
+# Portfolio Rebuild Plan — jesse-salinas.com
 
 ## Proposed Stack
 
@@ -57,7 +57,7 @@
 - [ ] `astro build` → static output in `dist/`
 - [ ] Create S3 bucket for static website hosting
 - [ ] CloudFront distribution with ACM SSL cert
-- [ ] Update DNS for `jessesalinas.dev`
+- [ ] Update DNS for `jesse-salinas.com` (Route 53)
 - [ ] Tear down Digital Ocean droplet
 
 ---
