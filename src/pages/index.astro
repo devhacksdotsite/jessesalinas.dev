@@ -64,6 +64,9 @@ import Contact from '../components/Contact.astro';
         </div>
       </div>
 
+      <!-- Links -->
+      <div id="dialog-links" class="flex gap-4 mb-10"></div>
+
       <div class="border-t border-border pt-8">
         <p id="dialog-details" class="text-text-muted leading-relaxed text-lg"></p>
       </div>
@@ -100,7 +103,11 @@ import Contact from '../components/Contact.astro';
         x: () => -window.innerWidth,
         duration: 0.8,
         ease: 'power3.inOut',
-        onComplete: () => { lock(); updateArrow(); },
+        onComplete: () => {
+          lock();
+          updateArrow();
+          (window as any).animateProjects?.();
+        },
       });
     }
 
@@ -109,6 +116,7 @@ import Contact from '../components/Contact.astro';
       locked = true;
       stage = 'hero';
       nav('home');
+      (window as any).resetProjects?.();
       gsap.to(track, {
         x: 0,
         duration: 0.8,
@@ -132,6 +140,7 @@ import Contact from '../components/Contact.astro';
 
     // Wheel
     window.addEventListener('wheel', (e) => {
+      if ((window as any).__dialogOpen) return;
       if (locked) { e.preventDefault(); return; }
 
       if (stage === 'hero') {
