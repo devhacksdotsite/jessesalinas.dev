@@ -38,8 +38,23 @@ const credentials = [
 ];
 ---
 
-<section id="about" class="py-24 px-6 bg-bg-secondary">
-  <div class="max-w-6xl mx-auto">
+<section id="about" class="py-24 px-6 bg-bg-secondary relative overflow-hidden">
+  <!-- Floating tech cloud background (left side) -->
+  <div id="about-tech-cloud" class="absolute inset-0 pointer-events-none">
+    <div id="about-cloud-inner" class="relative w-full h-full">
+      {['Node.js','React','Vue','TypeScript','Python','Docker','AWS','MySQL','Tailwind','Express','Next.js','Astro','PHP','Nginx','Git','Linux','Svelte','PrimeVue','Vitest','Playwright'].map((name, i) => {
+        const angle = (i / 20) * Math.PI * 2;
+        const radius = 18 + (i % 3) * 12;
+        const x = 22 + Math.cos(angle) * radius;
+        const y = 50 + Math.sin(angle) * radius;
+        const size = [0.6, 0.7, 0.8, 0.65, 0.75][i % 5];
+        const opacity = [0.08, 0.12, 0.06, 0.1, 0.07][i % 5];
+        return <span class="about-tech-word absolute text-accent font-semibold whitespace-nowrap" style={`left:${x}%;top:${y}%;font-size:${size}rem;opacity:${opacity};transform:translate(-50%,-50%);`}>{name}</span>
+      })}
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto relative z-10">
     <div class="overflow-hidden">
       <h2 class="section-heading text-4xl font-bold mb-12 translate-y-full">About Me</h2>
     </div>
@@ -114,4 +129,40 @@ const credentials = [
       duration: 0.6,
     },
   );
+
+  // About tech cloud animation
+  const aboutCloud = document.getElementById('about-cloud-inner');
+  if (aboutCloud) {
+    const cloudRotation = { angle: 0 };
+    gsap.to(cloudRotation, {
+      angle: 25,
+      duration: 80,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+      onUpdate: () => {
+        aboutCloud.style.transform = `rotate(${cloudRotation.angle}deg)`;
+      },
+    });
+
+    document.querySelectorAll('.about-tech-word').forEach((word) => {
+      gsap.to(word, {
+        y: `+=${4 + Math.random() * 10}`,
+        x: `+=${-6 + Math.random() * 12}`,
+        duration: 2.5 + Math.random() * 4,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: Math.random() * 3,
+      });
+      gsap.to(word, {
+        opacity: parseFloat((word as HTMLElement).style.opacity) * (0.4 + Math.random() * 1.2),
+        duration: 2 + Math.random() * 5,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        delay: Math.random() * 4,
+      });
+    });
+  }
 </script>
