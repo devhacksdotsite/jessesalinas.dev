@@ -1,44 +1,35 @@
 ---
 import Base from '../layouts/Base.astro';
-import { projects } from '../data/projects';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import Footer from '../components/Footer.astro';
 ---
 
 <Base>
-  <main class="mx-auto max-w-6xl px-6 py-12 sm:px-10 lg:px-16">
-    <header class="flex items-center justify-between border-b border-border pb-6">
-      <a href="/" class="text-sm font-semibold uppercase tracking-[0.18em]">Jesse Salinas</a>
-      <span class="text-sm text-muted">UGC Portfolio</span>
-    </header>
+  <div id="top">
+    <Nav />
 
-    <section class="py-24 sm:py-32" aria-labelledby="page-title">
-      <p class="mb-5 text-sm font-medium uppercase tracking-[0.18em] text-accent">Tech & Software UGC Creator</p>
-      <h1 id="page-title" class="max-w-3xl text-5xl font-semibold tracking-tight sm:text-7xl">
-        Short-form content for technology brands.
-      </h1>
-      <p class="mt-7 max-w-xl text-lg leading-8 text-muted">
-        A standalone portfolio for SaaS, AI, apps, and consumer technology.
-      </p>
-    </section>
+    <main class="mx-auto max-w-6xl px-6 sm:px-10 lg:px-16">
+      <Hero />
 
-    <section id="work" aria-labelledby="work-title" class="border-t border-border py-20">
-      <h2 id="work-title" class="text-3xl font-semibold">Selected Work</h2>
-      {projects.length === 0 ? (
-        <p class="mt-6 max-w-xl text-muted">
-          Portfolio videos will appear here as they are added to the project data file.
-        </p>
-      ) : (
-        <div class="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <article>
-              <video class="aspect-[9/16] w-full object-cover" controls preload="none" poster={project.poster} aria-label={project.alt}>
-                <source src={project.video} type="video/mp4" />
-              </video>
-              <h3 class="mt-4 font-medium">{project.title}</h3>
-              <p class="mt-1 text-sm text-muted">{project.category}</p>
-            </article>
-          ))}
-        </div>
-      )}
-    </section>
-  </main>
+      <section id="work" class="border-t border-border py-20 sm:py-28" aria-labelledby="work-title">
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Portfolio</p>
+        <h2 id="work-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Selected Work</h2>
+        <p class="mt-5 max-w-xl text-lg leading-8 text-muted">Short-form concepts built for TikTok, Reels, and paid social.</p>
+      </section>
+
+      <section id="about" class="border-t border-border py-20 sm:py-28" aria-labelledby="about-title">
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">About</p>
+        <h2 id="about-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">About Jesse</h2>
+      </section>
+
+      <section id="contact" class="border-t border-border py-20 sm:py-28" aria-labelledby="contact-title">
+        <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Contact</p>
+        <h2 id="contact-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Let’s work together.</h2>
+        <a class="mt-8 inline-block text-lg underline decoration-border underline-offset-8 transition-colors hover:decoration-foreground" href="mailto:hello@jesse-salinas.com?subject=UGC inquiry for Jesse">hello@jesse-salinas.com</a>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
 </Base>
