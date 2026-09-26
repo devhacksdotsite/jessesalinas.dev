@@ -14,3 +14,5 @@ npm run preview
 ```
 
 The existing developer portfolio remains in the repository root and is not part of this application.
+
+See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for production hosting guidance.
