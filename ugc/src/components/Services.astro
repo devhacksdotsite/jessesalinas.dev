@@ -1,0 +1,42 @@
+---
+const services = [
+  {
+    title: 'UGC Ads',
+    description: 'Short-form videos designed for paid or organic social.',
+  },
+  {
+    title: 'Product Demos',
+    description: 'Natural demonstrations that show how a product fits into everyday use.',
+  },
+  {
+    title: 'Voiceover + B-roll',
+    description: 'Narrative-driven content without requiring a traditional talking-head format.',
+  },
+  {
+    title: 'Screen Recording',
+    description: 'Clear walkthroughs for SaaS, apps, AI tools, and developer products.',
+  },
+  {
+    title: 'Problem → Solution',
+    description: 'Relatable hooks that show how a product solves a specific problem.',
+  },
+];
+---
+
+<section id="services" class="border-t border-border py-20 sm:py-28" aria-labelledby="services-title">
+  <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-20">
+    <div>
+      <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Capabilities</p>
+      <h2 id="services-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">What I Create</h2>
+    </div>
+
+    <div class="divide-y divide-border border-y border-border">
+      {services.map((service) => (
+        <article class="grid gap-2 py-6 sm:grid-cols-[0.75fr_1.25fr] sm:gap-8">
+          <h3 class="font-medium">{service.title}</h3>
+          <p class="leading-7 text-muted">{service.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
