@@ -12,6 +12,8 @@ This document describes how to add work to the UGC portfolio.
 
 Every video should have a poster image. Posters keep the portfolio visually useful before a video is loaded and improve the initial page experience.
 
+The current `placeholder-*.mp4` files and matching posters are temporary layout assets only. Replace them with Jesse's approved UGC footage before launch.
+
 ## Adding a project
 
 Add an entry to `src/data/projects.ts`:

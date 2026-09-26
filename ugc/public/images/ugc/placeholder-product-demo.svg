@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920">
+  <rect width="1080" height="1920" fill="#e9e5dc"/>
+  <path d="M0 1420h1080v500H0z" fill="#d5cec1"/>
+  <text x="72" y="180" fill="#8b4d2f" font-family="Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="6">PLACEHOLDER</text>
+  <text x="72" y="860" fill="#171717" font-family="Arial, sans-serif" font-size="72" font-weight="700">Product</text>
+  <text x="72" y="950" fill="#171717" font-family="Arial, sans-serif" font-size="72" font-weight="700">Demo</text>
+  <text x="72" y="1760" fill="#686762" font-family="Arial, sans-serif" font-size="28">Replace with approved UGC footage</text>
+</svg>
