@@ -5,6 +5,7 @@ import Hero from '../components/Hero.astro';
 import SelectedWork from '../components/SelectedWork.astro';
 import Services from '../components/Services.astro';
 import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -20,11 +21,7 @@ import Footer from '../components/Footer.astro';
 
       <About />
 
-      <section id="contact" class="border-t border-border py-20 sm:py-28" aria-labelledby="contact-title">
-        <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Contact</p>
-        <h2 id="contact-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Let’s work together.</h2>
-        <a class="mt-8 inline-block text-lg underline decoration-border underline-offset-8 transition-colors hover:decoration-foreground" href="mailto:hello@jesse-salinas.com?subject=UGC inquiry for Jesse">hello@jesse-salinas.com</a>
-      </section>
+      <Contact />
     </main>
 
     <Footer />
