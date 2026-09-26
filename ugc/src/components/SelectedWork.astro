@@ -1,0 +1,22 @@
+---
+import { projects } from '../data/projects';
+import VideoCard from './VideoCard.astro';
+---
+
+<section id="work" class="border-t border-border py-20 sm:py-28" aria-labelledby="work-title">
+  <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Portfolio</p>
+  <h2 id="work-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Selected Work</h2>
+  <p class="mt-5 max-w-xl text-lg leading-8 text-muted">Short-form concepts built for TikTok, Reels, and paid social.</p>
+
+  {projects.length > 0 ? (
+    <div class="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => <VideoCard project={project} />)}
+    </div>
+  ) : (
+    <div class="mt-12 border-y border-border py-12">
+      <p class="max-w-md text-lg leading-8 text-muted">
+        Work samples are being prepared. Check back soon for short-form content created for tech and software brands.
+      </p>
+    </div>
+  )}
+</section>

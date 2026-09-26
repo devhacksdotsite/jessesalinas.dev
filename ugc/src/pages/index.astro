@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
+import SelectedWork from '../components/SelectedWork.astro';
 import Footer from '../components/Footer.astro';
 ---
 
@@ -12,11 +13,7 @@ import Footer from '../components/Footer.astro';
     <main class="mx-auto max-w-6xl px-6 sm:px-10 lg:px-16">
       <Hero />
 
-      <section id="work" class="border-t border-border py-20 sm:py-28" aria-labelledby="work-title">
-        <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">Portfolio</p>
-        <h2 id="work-title" class="mt-4 text-3xl font-semibold tracking-tight sm:text-5xl">Selected Work</h2>
-        <p class="mt-5 max-w-xl text-lg leading-8 text-muted">Short-form concepts built for TikTok, Reels, and paid social.</p>
-      </section>
+      <SelectedWork />
 
       <section id="about" class="border-t border-border py-20 sm:py-28" aria-labelledby="about-title">
         <p class="text-sm font-medium uppercase tracking-[0.18em] text-accent">About</p>

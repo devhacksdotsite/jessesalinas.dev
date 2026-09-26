@@ -1,0 +1,31 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article>
+  <video
+    class="aspect-[9/16] w-full rounded-sm bg-surface object-cover"
+    controls
+    preload="none"
+    playsinline
+    poster={project.poster}
+    aria-label={project.alt}
+  >
+    <source src={project.video} type="video/mp4" />
+    Your browser does not support embedded video.
+  </video>
+
+  <div class="mt-4">
+    <div class="flex items-baseline justify-between gap-4">
+      <h3 class="font-medium">{project.title}</h3>
+      <p class="shrink-0 text-xs uppercase tracking-[0.12em] text-muted">{project.category}</p>
+    </div>
+    {project.description && <p class="mt-2 text-sm leading-6 text-muted">{project.description}</p>}
+  </div>
+</article>
