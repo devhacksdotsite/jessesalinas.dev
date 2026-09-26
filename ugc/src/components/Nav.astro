@@ -47,6 +47,14 @@ const links = [
     menu?.classList.toggle('hidden', isOpen);
   });
 
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      toggle.setAttribute('aria-expanded', 'false');
+      menu?.classList.add('hidden');
+      toggle.focus();
+    }
+  });
+
   menu?.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
       toggle?.setAttribute('aria-expanded', 'false');

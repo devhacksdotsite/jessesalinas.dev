@@ -17,6 +17,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     scroll-behavior: smooth;
+    scroll-padding-top: 1.5rem;
   }
 
   body {
@@ -28,6 +29,10 @@
   :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 4px;
+  }
+
+  section[id] {
+    scroll-margin-top: 1.5rem;
   }
 
   ::selection {
