@@ -10,6 +10,16 @@ const {
   title = 'Jesse Salinas — Tech & Software UGC Creator',
   description = 'Jesse Salinas creates short-form UGC content for SaaS, AI, apps, software, and technology brands.',
 } = Astro.props;
+
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Jesse Salinas',
+  url: 'https://ugc.jesse-salinas.com/',
+  jobTitle: 'Tech & Software UGC Creator',
+  description,
+  sameAs: ['https://www.tiktok.com/@fouruhohfour'],
+};
 ---
 
 <!doctype html>
@@ -20,6 +30,21 @@ const {
     <meta name="description" content={description} />
     <link rel="canonical" href="https://ugc.jesse-salinas.com/" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#f7f5f0" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Jesse Salinas UGC" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://ugc.jesse-salinas.com/" />
+    <meta property="og:image" content="https://ugc.jesse-salinas.com/images/og-image.svg" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://ugc.jesse-salinas.com/images/og-image.svg" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <title>{title}</title>
   </head>
   <body>
