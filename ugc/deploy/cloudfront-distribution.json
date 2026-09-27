@@ -1,0 +1,66 @@
+{
+  "CallerReference": "ugc-jesse-salinas-20260926",
+  "Aliases": {
+    "Quantity": 1,
+    "Items": ["ugc.jesse-salinas.com"]
+  },
+  "DefaultRootObject": "index.html",
+  "Origins": {
+    "Quantity": 1,
+    "Items": [
+      {
+        "Id": "ugc-s3-origin",
+        "DomainName": "ugc.jesse-salinas.com.s3.us-east-1.amazonaws.com",
+        "OriginPath": "",
+        "CustomHeaders": {
+          "Quantity": 0
+        },
+        "S3OriginConfig": {
+          "OriginAccessIdentity": ""
+        },
+        "OriginAccessControlId": "EO2ABG40048KP"
+      }
+    ]
+  },
+  "DefaultCacheBehavior": {
+    "TargetOriginId": "ugc-s3-origin",
+    "ViewerProtocolPolicy": "redirect-to-https",
+    "AllowedMethods": {
+      "Quantity": 2,
+      "Items": ["GET", "HEAD"],
+      "CachedMethods": {
+        "Quantity": 2,
+        "Items": ["GET", "HEAD"]
+      }
+    },
+    "SmoothStreaming": false,
+    "Compress": true,
+    "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+    "TrustedSigners": {
+      "Enabled": false,
+      "Quantity": 0
+    },
+    "TrustedKeyGroups": {
+      "Enabled": false,
+      "Quantity": 0
+    }
+  },
+  "Comment": "Jesse Salinas UGC portfolio",
+  "Enabled": true,
+  "PriceClass": "PriceClass_100",
+  "Restrictions": {
+    "GeoRestriction": {
+      "RestrictionType": "none",
+      "Quantity": 0
+    }
+  },
+  "ViewerCertificate": {
+    "ACMCertificateArn": "arn:aws:acm:us-east-1:691862619118:certificate/f4621e90-5e51-4ff2-9cbd-60ec3a04391d",
+    "SSLSupportMethod": "sni-only",
+    "MinimumProtocolVersion": "TLSv1.2_2021",
+    "Certificate": "arn:aws:acm:us-east-1:691862619118:certificate/f4621e90-5e51-4ff2-9cbd-60ec3a04391d",
+    "CloudFrontDefaultCertificate": false
+  },
+  "HttpVersion": "http2",
+  "IsIPV6Enabled": true
+}

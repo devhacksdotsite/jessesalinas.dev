@@ -1,0 +1,58 @@
+name: Deploy developer portfolio
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'tsconfig.json'
+      - '.github/workflows/deploy-developer.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: deploy-developer-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build developer portfolio
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Upload developer portfolio
+        run: aws s3 sync dist/ s3://jesse-salinas.com --delete
+
+      - name: Keep HTML revalidation-friendly
+        run: aws s3 cp dist/index.html s3://jesse-salinas.com/index.html --cache-control "no-cache, no-store, must-revalidate" --content-type "text/html; charset=utf-8"
+
+      - name: Invalidate developer CloudFront distribution
+        run: aws cloudfront create-invalidation --distribution-id E6M3IQC5WMA7U --paths '/*'

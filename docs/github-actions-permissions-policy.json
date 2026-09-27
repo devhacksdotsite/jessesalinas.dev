@@ -1,0 +1,39 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListDeploymentBuckets",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::jesse-salinas.com",
+        "arn:aws:s3:::ugc.jesse-salinas.com"
+      ]
+    },
+    {
+      "Sid": "SyncDeploymentObjects",
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::jesse-salinas.com/*",
+        "arn:aws:s3:::ugc.jesse-salinas.com/*"
+      ]
+    },
+    {
+      "Sid": "InvalidateSiteDistributions",
+      "Effect": "Allow",
+      "Action": "cloudfront:CreateInvalidation",
+      "Resource": [
+        "arn:aws:cloudfront::691862619118:distribution/E6M3IQC5WMA7U",
+        "arn:aws:cloudfront::691862619118:distribution/EQ7UJH31IY14C"
+      ]
+    }
+  ]
+}
