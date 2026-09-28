@@ -27,10 +27,10 @@ Both workflows use GitHub OIDC and expect this GitHub Actions secret:
 AWS_DEPLOY_ROLE_ARN
 ```
 
-Set it on the repository or on the `production` environment. The AWS role trust policy should be restricted to:
+Set it on the repository or on the `production` environment. The AWS role trust policy is restricted to the `production` environment, which is only used by the `main`-branch deployment jobs:
 
 ```text
-repo:devhacksdotsite/jessesalinas.dev:ref:refs/heads/main
+repo:devhacksdotsite/jessesalinas.dev:environment:production
 ```
 
 The policy files used for the deployment role are checked in here:
